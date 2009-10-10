@@ -1,0 +1,4 @@
+sites/*
+!sites/default
+!sites/all
+
