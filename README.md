@@ -1,7 +1,7 @@
 Basic Drupal
 ============
 
-I'll I am trying to do is so that I don't have to re-invent the wheel everytime I want to do a drupal install. I have found that I constantly am downloading that same bunch of modules. I imagine this will work something like the following. 
+I'll I am trying to do is so that I don't have to re-invent the wheel every time I want to do a Drupal install. I have found that I am constantly downloading that same bunch of modules. I imagine this will work something like the following. 
 
     git clone git://github.com/voidfiles/Basic-Drupal.git basic-drupal;
     cd basic-drupal;

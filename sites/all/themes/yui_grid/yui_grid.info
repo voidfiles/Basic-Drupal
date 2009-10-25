@@ -1,0 +1,22 @@
+name = YUI
+description = Clean, pure CSS table-less example theme based upon YUI 2.7.0 reset-fonts-grid-base with ARIA Landmark Roles.
+core = 6.x
+engine = phptemplate
+
+; Style sheets
+stylesheets[all][] = reset-fonts-grids.css
+stylesheets[all][] = base-min.css
+stylesheets[all][] = style.css
+
+; Regions
+regions[left] = Sidebar
+regions[content] = Content
+regions[header] = Header
+regions[footer] = Footer
+
+; Information added by drupal.org packaging script on 2009-06-09
+version = "6.x-1.2"
+core = "6.x"
+project = "yui_grid"
+datestamp = "1244570842"
+

@@ -1,0 +1,9 @@
+/* empty, add necessary CSS rules below */
+
+table td {
+  border: none;
+}
+
+tbody {
+  border-top: none;
+}
