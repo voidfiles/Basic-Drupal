@@ -1,0 +1,15 @@
+<?php
+// $Id: notifications_location.install,v 1.1.2.1 2009/04/24 03:07:24 grendzy Exp $
+
+/**
+ * @file
+ * Install file for Location Notifications module.
+ */
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function notifications_location_uninstall() {
+  variable_del('notifications_location_block_redirect');
+  variable_del('notifications_location_block_zip_label');
+}

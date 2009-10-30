@@ -1,0 +1,168 @@
+<?php
+// $Id: notifications_location.module,v 1.1.2.1.2.7 2009/09/21 05:22:32 grendzy Exp $
+
+/**
+ * @file
+ * Location Notifications module.
+ */
+
+/**
+ * Implementation of hook_menu_().
+ */
+function notifications_location_menu() {
+  $items['user/%user/notifications/location'] = array(
+    'type' => MENU_LOCAL_TASK,
+    // @TODO - notifications_content.module uses FALSE here, why?
+    'access callback' => 'notifications_content_access',
+    'access arguments' => array(1, 'subscribe to locations'),
+    'title' => t('Location'),
+    'page callback' => 'notifications_location_user_page',
+    'page arguments' => array(1),
+    'weight' => 10,
+  );
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function notifications_location_perm() {
+  return array('subscribe to locations');
+}
+
+/**
+ * Returns a rendered subscription form, with a list of user locations to choose from.
+ *
+ * @TODO - Clean up this page, it should just show existing subscriptions.  Or maybe just go away?  Possible a leftover of Notifications 1.x.
+ */
+function notifications_location_user_page($account = NULL) {
+  global $user;
+
+  if (is_null($account)) {
+    $account = $user;
+  }
+
+  $locations = location_load_locations($account->uid, 'uid');
+  $subscriptions = notifications_get_subscriptions(array('type' => 'location', 'uid' => $account->uid), array('lid' => NULL), TRUE);
+
+  if (empty($locations)) {
+    $output = t('You have not yet added any locations to <a href="@edit">your user page.</a>',
+      array('@edit' => url('user/'. $user->uid .'/edit')));
+  }
+  else {
+    foreach ($locations as $loc) {
+      $settings = variable_get('location_settings_user', array());
+      $list[$loc['lid']] = theme('location', $loc, $settings['display']['hide']);
+    }
+
+    $defaults = array('type' => 'location', 'event_type' => 'node');
+    $options = array('title' => t('Location'));
+
+    $output = drupal_get_form('notifications_user_form', $account, 'location', $subscriptions, $list, $defaults, $options);
+  }
+
+  return ($output);
+}
+
+/**
+ * Implementation of hook_notifications().
+ */
+function notifications_location_notifications($op, &$arg0, $arg1 = NULL, $arg2 = NULL) {
+  switch ($op) {
+    case 'subscription types':
+      $types['location'] = array(
+        'event_type' => 'node',
+        'title' => t('Location'),
+        'description' => t("Subscribe to content that's geographically near."),
+        'access' => 'subscribe to locations',
+        'page callback' => 'notifications_location_user_page',
+        'user page' => 'user/%user/notifications/locatio',
+        'fields' => array('lid', 'distance'),
+      );
+      return $types;
+    case 'subscription fields':
+      // Information about available fields for subscriptions
+      $fields['lid'] = array(
+        'name' => t('Location'),
+        'field' => 'lid',
+        'type' => 'int',
+        'format callback' => 'notifications_location_format_lid',
+        'options callback' => '_notifications_location_lid_options',
+      );
+      $fields['distance'] = array(
+        'name' => t('Distance'),
+        'field' => 'distance',
+        'type' => 'int',
+        'format callback' => 'notifications_location_format_distance',
+      );
+      return $fields;
+    case 'query':
+      if ($arg0 == 'event' && $arg1 == 'node' && ($node = $arg2->node) || $arg0 == 'user' && $arg1 == 'node' && ($node = $arg2)) {
+        if (isset($node->locations)) {
+          $query[]['join'] = 'LEFT JOIN {location} l ON f.intval = l.lid AND f.field = "lid"';
+          foreach ($node->locations as $location) {
+            $query[]['fields sql'] = earth_distance_sql((float)$location['longitude'], (float)$location['latitude'], 'l') .
+              ' < (SELECT intval from {notifications_fields} where field = "distance" AND sid = s.sid) '.
+              'AND l.latitude IS NOT NULL AND l.longitude IS NOT NULL';
+          }
+          return $query;
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Render a location id for display.
+ *
+ * @param int $lid
+ * @return HTML display of location
+ */
+function notifications_location_format_lid($lid) {
+  $location = location_load_location($lid);
+  $settings = variable_get('location_settings_user', array());
+  return theme('location', $location, $settings['display']['hide']);
+}
+
+/**
+ * Render a distance for display.
+ * @TODO - Allow configurable units
+ *
+ * @param int $distance in meters
+ * @return Formatted text representation of the distance.
+ */
+function notifications_location_format_distance($distance) {
+  return (($distance / 1000) . 'km radius');
+}
+
+/**
+ * Callback to determine optinons for subscription form.
+ *
+ * @return An associative array of location ids and location text.
+ */
+function _notifications_location_lid_options() {
+  global $user;
+  $locations = location_load_locations($user->uid, 'uid');
+  $settings = variable_get('location_settings_user', array());
+  $settings['display']['hide']['map_link'] = 1;
+  $options = array();
+  foreach ($locations as $loc) {
+    $loc_text = theme('location', $loc, $settings['display']['hide']);
+    $loc_text = preg_replace('/<div.*?>/', ' ', $loc_text);
+    $loc_text = strip_tags($loc_text);
+    $options[$loc['lid']] = $loc_text;
+  }
+  return $options;
+}
+
+/**
+ * Implementation of hook_locationapi().
+ * If a location is deleted, remove any related subscriptions.
+ */
+function notifications_location_locationapi(&$location, $op, $a3 = NULL, $a4 = NULL) {
+  switch ($op) {
+    case 'delete':
+      notifications_delete_subscriptions(array('type' => 'location'), array('lid' => $location['lid']));
+      break;
+  }
+}

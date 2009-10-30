@@ -1,0 +1,13 @@
+; $Id: messaging_sendto.info,v 1.1 2008/12/18 18:46:41 davidg Exp $
+name = Send To
+description = Content "Send To" feature using messaging framework
+package = "Messaging"
+core = 6.x
+dependencies[] = messaging
+
+; Information added by drupal.org packaging script on 2009-05-27
+version = "6.x-1.x-dev"
+core = "6.x"
+project = "messaging_sendto"
+datestamp = "1243383323"
+

@@ -1,0 +1,13 @@
+; $Id: notifications_feed.info,v 1.1 2009/04/22 15:43:00 jareyero Exp $
+name = FeedAPI Subscriptions
+description = Allows users to subscribe to feeds and be notified when they are updated
+package = "Notifications"
+dependencies[] = notifications
+dependencies[] = feedapi
+core = 6.x
+; Information added by drupal.org packaging script on 2009-04-29
+version = "6.x-2.0-beta2"
+core = "6.x"
+project = "notifications_extra"
+datestamp = "1240996272"
+

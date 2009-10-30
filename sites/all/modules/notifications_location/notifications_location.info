@@ -1,0 +1,15 @@
+; $Id: notifications_location.info,v 1.1.2.1 2009/04/24 03:07:24 grendzy Exp $
+name = Location Notifications
+description = Allows users to subscribe to Location-enabled content.
+package = "Notifications"
+dependencies[] = notifications_content
+dependencies[] = location_user
+core = 6.x
+
+
+; Information added by drupal.org packaging script on 2009-09-21
+version = "6.x-2.x-dev"
+core = "6.x"
+project = "notifications_location"
+datestamp = "1253535802"
+

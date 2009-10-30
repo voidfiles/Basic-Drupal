@@ -1,0 +1,20 @@
+$Id
+
+To use this module: 
+
+First, you must download the ProwlPHP class from: 
+
+http://github.com/Fenric/ProwlPHP/tree/master
+
+and place it in a directory called ProwlPHP
+
+To download it, run this command from the prowl module directory:
+
+mkdir ProwlPHP; wget -O ProwlPHP/ProwlPHP.php "http://github.com/Fenric/ProwlPHP/blob?path%5B%5D=ProwlPHP.php&raw=true"
+
+Once you have installed ProwlPHP, simply go the modules page, enable the module, and then visit
+
+/admin/settings/prowl
+
+To enable storing API keys for each user on your site, enable the prowl user integration module, 
+and then visit the edit page for each user you wish to add a key for.
