@@ -1,4 +1,3 @@
 sites/*
 !sites/default
 !sites/all
-!sites/network.tastestalkr.com
