@@ -1,0 +1,26 @@
+// $Id: CHANGELOG.txt,v 1.7 2009/11/04 19:35:27 alexb Exp $
+
+Feeds 6.x 1.0 Alpha 7, 2009-11-04
+---------------------------------
+
+- #622654 Don't show body as option for mapper when body is disabled
+- Allow cURL only to download via http or https
+- Throw an exception in FeedsHTTPFetcher if result is not 200
+
+Feeds 6.x 1.0 Alpha 6, 2009-11-03
+---------------------------------
+
+- Split number of items to queue on cron from feeds_schedule_num variable
+  (see README.txt)
+- #619110 Fix node_delete() in FeedsNodeProcessor
+- Add descriptions to all mapping sources and targets
+
+Feeds 6.x 1.0 Alpha 5, 2009-10-23
+---------------------------------
+
+- #584500 Add Feeds default module
+
+Feeds 6.x 1.0 Alpha 4, 2009-10-21
+---------------------------------
+
+- Initial release
